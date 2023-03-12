@@ -115,41 +115,113 @@
         <h2 class="box-title text-dark">Filters</h2>
       </div>
       <div class="box-body">
-        <form action="" method="GET">
-          @csrf
-          <div class="row">
-            
-            <div class="col-md-2">
-              <label for="">Accounts</label>
-              <select class="form-control" name="parent_id" id="parent_id">
-                <option value="">Select  Account</option>
-              </select>
-            </div>
-            <div class="col-md-2">
-              <label for="">Company</label>
-              <select class="form-control" name="parent_id" id="parent_id">
-                <option value="">Select  Account</option>
-              </select>
-            </div>
-            <div class="col-md-2">
-              <label for="">Item</label>
-              <select class="form-control" name="parent_id" id="parent_id">
-                <option value="">Select Item</option>
-              </select>
-            </div>
-            <div class="col-md-3">
-              <label for="">From</label>
-              <input type="date" class="form-control" name="from_date" id="from_date">
-            </div>
-            <div class="col-md-3">
-              <label for="">To</label>
-              <input type="date" class="form-control" name="to-date" id="to-date">
-            </div>
-            <div class="col-md-2">
-              <input type="submit" class="btn btn-primary" value="Search">
-            </div>
-          </div>
-        </form>
+      <form class="ajaxForm" role="form" action="{{ route('admin.flocks.store') }}" method="POST" novalidate>
+              @csrf
+                <div class="row">
+                  <div class="col-md-3">
+                    <div class="form-group">
+                      <label>Date</label>
+                      <input class="form-control" type="date" required data-validation-required-message="This field is required"  name="date" value="{{ (isset($is_update_receipt)) ? date('Y-m-d', strtotime(@$edit_receipt->date)) : date('Y-d-d') }}" required>
+                    </div>
+                  </div>
+                  <!-- <input type="hidden" name="cash_id" value="{{ @$edit_receipt->hashid }}">
+                  <input type="hidden" name="status" value="receipt"> -->
+                  <div class="col-md-3">
+                    <div class="form-group">
+                      <label>Company(All Chicks Companies) </label>
+                      <select class="form-control select2" name="shade" id="shade">
+                        <option value="">Select Company</option>
+                        
+                      </select>
+                    </div>
+                  </div>
+
+                  <div class="col-md-3">
+                    <div class="form-group">
+                      <label>Item (selectd Companies Item)</label>
+                      <select class="form-control select2" name="shade" id="shade">
+                        <option value="">Select Item</option>
+                        
+                      </select>
+                    </div>
+                  </div>
+
+                  <div class="col-md-3">
+                    <div class="form-group">
+                      <label>Account </label>
+                      <select class="form-control select2" name="shade" id="shade">
+                        <option value="">Select Account</option>
+                        
+                      </select>
+                    </div>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-md-3">
+                    <div class="form-group">
+                      <label>Rate</label>
+                      <input class="form-control" name="rate" value="{{ @$edit_receipt->name }}" required>
+                    </div>
+                  </div>
+                  <div class="col-md-3">
+                    <div class="form-group">
+                      <label>Quantity</label>
+                      <input class="form-control" name="quantity" value="{{ @$edit_receipt->name }}" required>
+                    </div>
+                  </div>
+                  <div class="col-md-3">
+                    <div class="form-group">
+                      <label>Purchase Ammount</label>
+                      <input class="form-control" name="purchase_ammount" value="{{ @$edit_receipt->purchase_ammount }}" required>
+                    </div>
+                  </div>
+                  
+                  <div class="col-md-3">
+                    <div class="form-group">
+                      <label>Status </label>
+                        <select class="form-control select2" name="status" id="status">
+                          <option value="available">Available</option>
+                          <option value="not_available">Not Available</option>
+                        </select>
+                    </div>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-md-3">
+                    <div class="form-group">
+                      <label>Commission</label>
+                      <input class="form-control" name="commission" value="{{ @$edit_receipt->commission }}" required>
+                    </div>
+                  </div>
+                  <div class="col-md-3">
+                    <div class="form-group">
+                      <label>Discount</label>
+                      <input class="form-control" name="discount" value="{{ @$edit_receipt->discount }}" required>
+                    </div>
+                  </div>
+                  <div class="col-md-3">
+                    <div class="form-group">
+                      <label>Other Charges</label>
+                      <input class="form-control" name="other_charges" value="{{ @$edit_receipt->other_charges }}" required>
+                    </div>
+                  </div>
+                  <div class="col-md-3">
+                    <div class="form-group">
+                      <label>Net Ammount</label>
+                      <input class="form-control" name="net_ammount" value="{{ @$edit_receipt->net_ammount }}" required>
+                    </div>
+                  </div>
+                  
+                  
+                </div>
+                <div class="row">
+                        <div class="col-md-12 form-group">
+                            <label for="">Remarks</label>
+                            <textarea class="form-control" name="remarks" id="remarks" cols="30" rows="4">{{ @$edit_account->address }}</textarea>
+                        </div>
+                    </div>
+              </form>
+              
       </div>
     </div>
     <div class="box">

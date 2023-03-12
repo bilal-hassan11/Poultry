@@ -18,7 +18,7 @@
               
               <br />
               
-              <form class="ajaxForm" role="form" action="{{ route('admin.flocks.store') }}" method="POST" novalidate>
+              <form class="ajaxForm" role="form" action="{{ route('admin.medicine.store') }}" method="POST" novalidate>
               @csrf
                 <div class="row">
                   <div class="col-md-3">
@@ -31,7 +31,7 @@
                   <input type="hidden" name="status" value="receipt"> -->
                   <div class="col-md-3">
                     <div class="form-group">
-                      <label>Company(All Chicks Companies) </label>
+                      <label>Company(All Medicine Companies) </label>
                       <select class="form-control select2" name="shade" id="shade">
                         <option value="">Select Company</option>
                         
@@ -99,19 +99,19 @@
                   <div class="col-md-3">
                     <div class="form-group">
                       <label>Discount</label>
-                      <input class="form-control" name="discount" value="{{ @$edit_receipt->discount }}" required>
+                      <input class="form-control" name="discount" value="" required>
                     </div>
                   </div>
                   <div class="col-md-3">
                     <div class="form-group">
                       <label>Other Charges</label>
-                      <input class="form-control" name="other_charges" value="{{ @$edit_receipt->other_charges }}" required>
+                      <input class="form-control" name="other_charges" value="" required>
                     </div>
                   </div>
                   <div class="col-md-3">
                     <div class="form-group">
                       <label>Net Ammount</label>
-                      <input class="form-control" name="net_ammount" value="{{ @$edit_receipt->net_ammount }}" required>
+                      <input class="form-control" name="net_ammount" value="" required>
                     </div>
                   </div>
                   
@@ -120,7 +120,7 @@
                 <div class="row">
                         <div class="col-md-12 form-group">
                             <label for="">Remarks</label>
-                            <textarea class="form-control" name="remarks" id="remarks" cols="30" rows="4">{{ @$edit_account->address }}</textarea>
+                            <textarea class="form-control" name="remarks" id="remarks" cols="30" rows="4"></textarea>
                         </div>
                     </div>
               </form>
