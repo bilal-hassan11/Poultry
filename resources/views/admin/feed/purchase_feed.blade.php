@@ -74,8 +74,8 @@
                   </div>
                   <div class="col-md-3">
                     <div class="form-group">
-                      <label>Net Ammount</label>
-                      <input class="form-control" name="net_ammount" value="{{ @$edit_receipt->name }}" required>
+                      <label>Purchase Ammount</label>
+                      <input class="form-control" name="purchase_ammount" value="{{ @$edit_receipt->purchase_ammount }}" required>
                     </div>
                   </div>
                   
@@ -88,6 +88,34 @@
                         </select>
                     </div>
                   </div>
+                </div>
+                <div class="row">
+                  <div class="col-md-3">
+                    <div class="form-group">
+                      <label>Commission</label>
+                      <input class="form-control" name="commission" value="{{ @$edit_receipt->commission }}" required>
+                    </div>
+                  </div>
+                  <div class="col-md-3">
+                    <div class="form-group">
+                      <label>Discount</label>
+                      <input class="form-control" name="discount" value="{{ @$edit_receipt->discount }}" required>
+                    </div>
+                  </div>
+                  <div class="col-md-3">
+                    <div class="form-group">
+                      <label>Other Charges</label>
+                      <input class="form-control" name="other_charges" value="{{ @$edit_receipt->other_charges }}" required>
+                    </div>
+                  </div>
+                  <div class="col-md-3">
+                    <div class="form-group">
+                      <label>Net Ammount</label>
+                      <input class="form-control" name="net_ammount" value="{{ @$edit_receipt->net_ammount }}" required>
+                    </div>
+                  </div>
+                  
+                  
                 </div>
                 <div class="row">
                         <div class="col-md-12 form-group">
