@@ -6,7 +6,9 @@ use App\Http\Controllers\Administrator\AccountTypeController;
 use App\Http\Controllers\Administrator\CategoryController;
 use App\Http\Controllers\SalesController;
 
-use App\Http\Controllers\DetailViewController;
+use App\Http\Controllers\DetailViewController;  
+use App\Http\Controllers\CompanyController;
+
 use App\Http\Controllers\Administrator\OrderController;
 use App\Http\Controllers\PurchaseController;
 use App\Http\Controllers\CashController;
@@ -267,7 +269,14 @@ Route::middleware('auth:admin')->prefix('web_admin')->name('admin.')->group(func
     });
 
     //New Controllers 
-    
+    //Company 
+    Route::controller(CompanyController::class)->prefix('company')->name('companys.')->group(function(){
+        Route::get('/', 'index')->name('index');
+        Route::post('/store', 'store')->name('store');
+        Route::get('/edit/{id}', 'edit')->name('edit');
+        Route::get('/delete/{id}', 'delete')->name('delete');
+    });
+
     //Chick 
     Route::controller(ChickController::class)->prefix('chick')->name('chicks.')->group(function(){
         Route::get('/', 'index')->name('index');

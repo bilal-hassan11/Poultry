@@ -71,6 +71,15 @@
 			  </ul>	
 		</li>
 
+		<!-- Company -->
+		<li>
+			<a href="{{route('admin.companys.index')}}">
+			<i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>
+				<span> Companies </span>
+			</a>
+		</li>
+
+
 		<!-- Flock -->
 		<li>
 			<a href="{{route('admin.flocks.index')}}">

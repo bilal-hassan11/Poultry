@@ -7,13 +7,13 @@ use Illuminate\Database\Eloquent\Model;
 use App\Traits\DianujHashidsTrait;
 
 
-class Companies extends Model
+class Company extends Model
 {
     use HasFactory, DianujHashidsTrait;
 
     protected $table = 'companies';
 
-    public function categories(){
+    public function category(){
         return $this->belongsTo(Category::class, 'category_id', 'id');
     }
 }
