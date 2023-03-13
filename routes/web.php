@@ -281,11 +281,13 @@ Route::middleware('auth:admin')->prefix('web_admin')->name('admin.')->group(func
     Route::controller(ChickController::class)->prefix('chick')->name('chicks.')->group(function(){
         Route::get('/', 'index')->name('index');
         Route::get('/purchase_chick', 'purchase_chick')->name('purchase_chick');
+        Route::post('/store-purchase-chick', 'storePurchaseChick')->name('purchase_store');
+        Route::get('/edit-purchase-chick/{id}', 'editPurchaseChick')->name('purchase_edit');
+        Route::get('/delete-purchase-chick/{id}', 'deletePurchaseChick')->name('purchase_delete');
         Route::get('/sale_chick', 'sale_chick')->name('sale_chick');
-        
-        Route::post('/store', 'store')->name('store');
-        Route::get('/edit/{id}', 'edit')->name('edit');
-        Route::get('/delete/{id}', 'delete')->name('delete');
+        // Route::post('/store', 'store')->name('store');
+        // Route::get('/edit/{id}', 'edit')->name('edit');
+        // Route::get('/delete/{id}', 'delete')->name('delete');
     });
 
     //Medicine 
