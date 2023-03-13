@@ -17,7 +17,7 @@
               <h1>Shade Details</h1><br />
               
               <br />
-              <h3>Receipts</h3><br />
+              <h3>Add Shade</h3><br />
               <form class="ajaxForm" role="form" action="{{ route('admin.shades.store') }}" method="POST" novalidate>
               @csrf
                 <div class="row">
@@ -27,22 +27,23 @@
                       <input class="form-control" type="date" required data-validation-required-message="This field is required"  name="date" value="{{ (isset($is_update_receipt)) ? date('Y-m-d', strtotime(@$edit_receipt->date)) : date('Y-d-d') }}" required>
                     </div>
                   </div>
-                  <!-- <input type="hidden" name="cash_id" value="{{ @$edit_receipt->hashid }}">
-                  <input type="hidden" name="status" value="receipt"> -->
-
+                  <input type="hidden" name="shade_id" value="{{ @$edit_shade->hashid }}">
+                  
                   <div class="col-md-3">
                     <div class="form-group">
                       <label>Supervisor </label>
-                      <select class="form-control select2" name="status" id="status">
+                      <select class="form-control select2" name="staff_id" id="staff_id">
                         <option value="">Select Supervisor</option>
-                        
+                        @foreach($staff as $s)
+                        <option  value="{{ $s->hashid }}" @if(@$edit_shade->staff_id == $s->id) selected @endif>{{ $s->first_name }}</option>
+                        @endforeach
                       </select>
                     </div>
                   </div>
                   <div class="col-md-3">
                     <div class="form-group">
                       <label>Shade Name </label>
-                      <input class="form-control" name="bil_no" value="{{ @$edit_receipt->bil_no }}" required>
+                      <input class="form-control" name="name" value="{{ @$edit_shade->name }}" required>
                     </div>
                   </div>
                   <div class="col-md-3">
@@ -56,11 +57,18 @@
                   </div>
                 </div>
                 <div class="row">
-                        <div class="col-md-12 form-group">
-                            <label for="">Address</label>
-                            <textarea class="form-control" name="address" id="address" cols="30" rows="4">{{ @$edit_account->address }}</textarea>
-                        </div>
+                  <div class="col-md-12 form-group">
+                      <label for="">Address</label>
+                      <textarea class="form-control" name="address" id="address" cols="30" rows="4">{{ @$edit_shade->address }}</textarea>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-md-3">
+                    <div class="form-group">
+                      <button type="submit" value="submit" name="save_shade" class="btn btn-success"> Save </button>
                     </div>
+                  </div>
+                </div>  
               </form>
               
               
@@ -136,23 +144,32 @@
                     <table id="example5" class="text-fade table table-bordered" style="width:100%">
                     <thead>
                         <tr class="text-dark">
-                            <th>Name</th>
-                            <th>Position</th>
-                            <th>Office</th>
-                            <th>Age</th>
                             <th>Start date</th>
-                            <th>Salary</th>
+                            <th>Supervisor Name</th>
+                            <th>Shade Name</th>
+                            <th>Status</th>
+                            <th>Address</th>
+                            <th>Action</th>
                         </tr>
                     </thead>
                     <tbody>
+                      @foreach($shade AS $s)
                         <tr>
-                            <td class="text-dark">Donna Snider</td>
-                            <td>Customer Support</td>
-                            <td>New York</td>
-                            <td>27</td>
-                            <td>2011/01/25</td>
-                            <td>$112,000</td>
+                            <td class="text-dark">{{ @$s->date }}</td>
+                            <td>{{ $s->staff->first_name }}</td>
+                            <td>{{ $s->name }}</td>
+                            <td>{{ $s->status }}</td>
+                            <td>{{ $s->address }}</td>
+                            <td width="120">
+                                <a href="{{route('admin.shades.edit', $s->hashid)}}" class="btn btn-warning btn-xs waves-effect waves-light">
+                                    <i class="fas fa-edit"></i>
+                                </a>
+                                <button type="button" onclick="ajaxRequest(this)" data-url="{{ route('admin.shades.delete', $s->hashid) }}"  class="btn btn-danger btn-xs waves-effect waves-light">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </td>
                         </tr>
+                        @endforeach
                     </tbody>
                     <tfoot>
                         <tr>
@@ -178,17 +195,5 @@
 
 @section('page-scripts')
 @include('admin.partials.datatable')
-<script>
-  $('#grand_parent_id').change(function(){
-    var id    = $(this).val();
-    var route = "{{ route('admin.cash.get_parent_accounts', ':id') }}";
-    route     = route.replace(':id', id);
 
-   if(id != ''){
-      getAjaxRequests(route, "", "GET", function(resp){
-        $('#parent_id').html(resp.html);
-      });
-    }
-  })
-</script>
 @endsection

@@ -24,25 +24,26 @@
                   <div class="col-md-3">
                     <div class="form-group">
                       <label>Date</label>
-                      <input class="form-control" type="date" required data-validation-required-message="This field is required"  name="date" value="{{ (isset($is_update_receipt)) ? date('Y-m-d', strtotime(@$edit_receipt->date)) : date('Y-d-d') }}" required>
+                      <input class="form-control" type="date" required data-validation-required-message="This field is required"  name="starting_date" value="{{ (isset($is_update_receipt)) ? date('Y-m-d', strtotime(@$edit_receipt->date)) : date('Y-d-d') }}" required>
                     </div>
                   </div>
-                  <!-- <input type="hidden" name="cash_id" value="{{ @$edit_receipt->hashid }}">
-                  <input type="hidden" name="status" value="receipt"> -->
-
+                  <input type="hidden" name="flock_id" value="{{ @$edit_flock->hashid }}">
+                  
                   <div class="col-md-3">
                     <div class="form-group">
                       <label>Shade </label>
-                      <select class="form-control select2" name="shade" id="shade">
+                      <select class="form-control select2" name="shade_id" id="shade_id">
                         <option value="">Select Shade</option>
-                        
+                        @foreach($shade as $s)
+                        <option  value="{{ $s->hashid }}" @if(@$edit_flock->shade_id == $s->id) selected @endif>{{ $s->name }}</option>
+                        @endforeach
                       </select>
                     </div>
                   </div>
                   <div class="col-md-3">
                     <div class="form-group">
                       <label>Flock Name (Auto generated)</label>
-                      <input class="form-control" name="name" value="{{ @$edit_receipt->name }}" required>
+                      <input class="form-control" name="name" value="{{ @$edit_flock->name }}" required>
                     </div>
                   </div>
                   <div class="col-md-3">
@@ -55,7 +56,13 @@
                     </div>
                   </div>
                 </div>
-                
+                <div class="row">
+                  <div class="col-md-3">
+                    <div class="form-group">
+                      <button type="submit" value="submit" name="save_flock" class="btn btn-success"> Save </button>
+                    </div>
+                  </div>
+                </div>  
               </form>
               
               
@@ -131,22 +138,32 @@
                     <table id="example5" class="text-fade table table-bordered" style="width:100%">
                     <thead>
                         <tr class="text-dark">
+                            <th>Starting Date</th>
                             <th>Supervisor Name</th>
-                            <th>Shade</th>
+                            <th>Shade Name</th>
                             <th>Flock</th>
                             <th>Status</th>
                             <th>Action</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <tr>
-                            <td class="text-dark">Donna Snider</td>
-                            <td>Customer Support</td>
-                            <td>New York</td>
-                            <td>27</td>
-                            <td>Ative</td>
-
+                    @foreach($flock AS $f)
+                        <tr> 
+                            <td class="text-dark">{{  @$f->starting }}</td>
+                            <td>{{ @$f->shade->name }}</td>
+                            <td>{{ @$f->shade->name }}</td>
+                            <td>{{ @$f->name }}</td>
+                            <td>{{ $f->status }}</td>
+                            <td width="120">
+                                <a href="{{route('admin.flocks.edit', $f->hashid)}}" class="btn btn-warning btn-xs waves-effect waves-light">
+                                    <i class="fas fa-edit"></i>
+                                </a>
+                                <button type="button" onclick="ajaxRequest(this)" data-url="{{ route('admin.flocks.delete', $f->hashid) }}"  class="btn btn-danger btn-xs waves-effect waves-light">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </td>
                         </tr>
+                        @endforeach
                     </tbody>
                     <tfoot>
                         <tr>

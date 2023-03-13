@@ -12,7 +12,7 @@ class Flock extends Model
 
     protected $table = 'flocks';
 
-    // public function item(){
-    //     return $this->belongsTo(Item::class, 'item_id', 'id');
-    // }
+    public function shade(){
+        return $this->belongsTo(Flock::class, 'shade_id', 'id');
+    }
 }

@@ -12,7 +12,7 @@ class Shade extends Model
 
     protected $table = 'shades';
 
-    // public function item(){
-    //     return $this->belongsTo(Item::class, 'item_id', 'id');
-    // }
+    public function staff(){
+        return $this->belongsTo(Staff::class, 'staff_id', 'id');
+    }
 }
