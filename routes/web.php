@@ -285,6 +285,9 @@ Route::middleware('auth:admin')->prefix('web_admin')->name('admin.')->group(func
         Route::get('/edit-purchase-chick/{id}', 'editPurchaseChick')->name('purchase_edit');
         Route::get('/delete-purchase-chick/{id}', 'deletePurchaseChick')->name('purchase_delete');
         Route::get('/sale_chick', 'sale_chick')->name('sale_chick');
+        Route::post('/store-sale-chick', 'storeSaleChick')->name('sale_store');
+        Route::get('/edit-sale-chick/{id}', 'editSaleChick')->name('sale_edit');
+        Route::get('/delete-sale-chick/{id}', 'deleteSaleChick')->name('sale_delete');
         // Route::post('/store', 'store')->name('store');
         // Route::get('/edit/{id}', 'edit')->name('edit');
         // Route::get('/delete/{id}', 'delete')->name('delete');

@@ -99,7 +99,7 @@
                             <textarea class="form-control" name="remarks" id="remarks" cols="30" rows="4">{{ @$edit_purchase->remarks }}</textarea>
                         </div>
                   </div>
-                  <input type="hidden" name="purchase_chick_id" value="{{ $edit_purchase->hashid }}">
+                  <input type="hidden" name="purchase_chick_id" value="{{ @$edit_purchase->hashid }}">
                   <input type="submit" class="btn btn-primary" value="{{ (isset($is_update)) ? 'Update' : 'Add' }}">
               </form>
               
@@ -210,7 +210,7 @@
                           <button type="button" onclick="ajaxRequest(this)" data-url="{{ route('admin.chicks.purchase_delete', ['id'=>$purchase->hashid]) }}"  class="btn btn-danger btn-xs waves-effect waves-light">
                           <i class="fa-sharp fa-solid fa-plus"></i> &nbsp Post
                           </button>
-                  </td>
+                        </td>
                       </tr>
                     @endforeach
                     <tfoot>

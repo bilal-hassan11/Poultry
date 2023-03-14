@@ -3,12 +3,14 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\PurchaseChickRequest;
+use App\Http\Requests\SaleChickRequest;
 use Illuminate\Http\Request;
 use App\Models\Account;
 use App\Models\Category;
 use App\Models\Companies;
 use App\Models\Item;
 use App\Models\PurchaseChick;
+use App\Models\SaleChick;
 
 class ChickController extends Controller
 {
@@ -29,15 +31,6 @@ class ChickController extends Controller
             'purchase_chicks'   => PurchaseChick::with(['company:id,name','account:id,name','item:id,name'])->latest()->get(),
         );
         return view('admin.chick.purchase_chick')->with($data);
-    }
-
-    public function sale_chick(Request $req){
-        $data = array(
-            'title'     => 'Sale Chicks',
-            'accounts'  => Account::latest()->get(),
-            
-        );
-        return view('admin.chick.sale_chick')->with($data);
     }
 
     public function storePurchaseChick(PurchaseChickRequest $req){
@@ -86,6 +79,66 @@ class ChickController extends Controller
         PurchaseChick::destroy(hashids_decode($id));
         return response()->json([
             'success'   => 'Purchase chick deleted successfully',
+            'reload'    => true
+        ]);
+    }
+
+    public function sale_chick(Request $req){
+        $data = array(
+            'title'             => 'Sale Chicks',
+            'accounts'          => Account::latest()->get(),
+            'category'          => Category::with(['companies', 'items'])->where('name', 'Chick')->first(),
+            'sale_chicks'       => SaleChick::with(['company:id,name','account:id,name','item:id,name'])->latest()->get(),
+        );
+        return view('admin.chick.sale_chick')->with($data);
+    }
+
+    public function storeSaleChick(SaleChickRequest $req){
+        
+        $validated = $req->validated();
+        $item      = Item::findOrFail(hashids_decode($validated['item_id']));
+   
+        if(isset($validated['sale_chick_id']) && !empty($validated['sale_chick_id'])){//update the recrod
+            $sale = SaleChick::findOrFail(hashids_decode($validated['sale_chick_id']));
+            $msg      = 'Sale chick updated successfully';
+        }else{//add new record
+            $sale = new SaleChick;
+            $msg      = 'Sale chick added successfully';
+        }
+        $sale->date = $validated['date'];
+        $sale->company_id   = (int) hashids_decode($validated['company_id']);
+        $sale->item_id      = (int) hashids_decode($validated['item_id']);
+        $sale->account_id   = (int) hashids_decode($validated['account_id']);
+        $sale->rate         = (int) $item->price;
+        $sale->quantity     = (int) $validated['quantity'];
+        $sale->net_ammount  = (int) ($item->price * $validated['quantity']);
+        $sale->status       = $validated['status'];
+        $sale->remarks      = $validated['remarks'];
+        $sale->save();
+
+        return response()->json([
+            'success'   => $msg,
+            'redirect'  => route('admin.chicks.sale_chick')
+        ]);
+
+    }
+
+    public function editSaleChick($id){
+        $data = array(
+            'title'             => 'Edit sale Chicks',
+            'accounts'          => Account::latest()->get(),
+            'category'          => Category::with(['companies', 'items'])->where('name', 'Chick')->first(),
+            'sale_chicks'       => SaleChick::with(['company:id,name','account:id,name','item:id,name'])->latest()->get(),
+            'edit_sale'         => SaleChick::findOrFail(hashids_decode($id)),
+            'is_update'         => true
+        );
+        return view('admin.chick.sale_chick')->with($data);
+    }
+
+    public function deleteSaleChick($id){
+        SaleChick::destroy(hashids_decode($id));
+        return response()->json([
+            'success'   => 'Sale chick deleted successfully',
             'reload'    => true
         ]);
     }
