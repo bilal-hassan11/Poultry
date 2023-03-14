@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\PurchaseFeedRequest;
 use Illuminate\Http\Request;
 use App\Http\Requests\SaleRequest;
 use App\Models\Account;
@@ -11,16 +12,68 @@ use App\Models\OutwardDetail;
 use App\Models\SaleBook;
 use App\Models\AccountLedger;
 use App\Models\AccountType;
+use App\Models\Category;
+use App\Models\PurchaseFeed;
 
 class FeedController extends Controller
 {
     public function purchase_feed(Request $req){
         $data = array(
-            'title'     => 'Purchase Feeds',
-            'accounts'  => Account::latest()->get(),
-            
+            'title'             => 'Purchase Feeds',
+            'accounts'          => Account::latest()->get(),
+            'category'          => Category::with(['companies', 'items'])->where('name', 'Feed')->first(),
+            'purchase_feed'     => PurchaseFeed::with(['company:id,name','account:id,name','item:id,name'])->latest()->get(),
         );
         return view('admin.feed.purchase_feed')->with($data);
+    }
+
+    public function storePurchaseFeed(PurchaseFeedRequest $req){
+        
+        $validated = $req->validated();
+        $item      = Item::findOrFail(hashids_decode($validated['item_id']));
+        
+        if(isset($validated['purchase_feed_id']) && !empty($validated['purchase_feed_id'])){//update the recrod
+            $purchase = PurchaseFeed::findOrFail(hashids_decode($validated['purchase_feed_id']));
+            $msg      = 'Purcahse feed updated successfully';
+        }else{//add new record
+            $purchase = new PurchaseFeed;
+            $msg      = 'Purchase feed added successfully';
+        }
+        $purchase->date = $validated['date'];
+        $purchase->company_id   = (int) hashids_decode($validated['company_id']);
+        $purchase->item_id      = (int) hashids_decode($validated['item_id']);
+        $purchase->account_id   = (int) hashids_decode($validated['account_id']);
+        $purchase->rate         = (int) $item->price;
+        $purchase->quantity     = (int) $validated['quantity'];
+        $purchase->net_ammount  = (int) ($item->price * $validated['quantity']);
+        $purchase->status       = $validated['status'];
+        $purchase->remarks      = $validated['remarks'];
+        $purchase->save();
+
+        return response()->json([
+            'success'   => $msg,
+            'redirect'  => route('admin.feeds.purchase_feed')
+        ]);
+    }
+
+    public function editPurchaseFeed($id){
+        $data = array(
+            'title'             => 'Purchase Chicks',
+            'accounts'          => Account::latest()->get(),
+            'category'          => Category::with(['companies', 'items'])->where('name', 'Chick')->first(),
+            'purchase_feed'     => PurchaseFeed::with(['company:id,name','account:id,name','item:id,name'])->latest()->get(),
+            'edit_feed'         => PurchaseFeed::findOrFail(hashids_decode($id)),
+            'is_updatee'        => true
+        );
+        return view('admin.chick.purchase_chick')->with($data);
+    }
+
+    public function deletePurchaseFeed($id){
+        PurchaseFeed::destroy(hashids_decode($id));
+        return response()->json([
+            'success'   => 'Purchase feed deleted successfully',
+            'reload'    => true
+        ]);
     }
 
     public function sale_feed(Request $req){

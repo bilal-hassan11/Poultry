@@ -308,6 +308,10 @@ Route::middleware('auth:admin')->prefix('web_admin')->name('admin.')->group(func
     Route::controller(FeedController::class)->prefix('feed')->name('feeds.')->group(function(){
         Route::get('/', 'index')->name('index');
         Route::get('/purchase_feed', 'purchase_feed')->name('purchase_feed');
+        Route::post('/store-purchase-feed', 'storePurchaseFeed')->name('purchase_store');
+        Route::get('/edit-purchase-feed/{id}', 'editPurchaseFeed')->name('purchase_edit');
+        Route::get('/delete-purchase-feed/{id}', 'deletePurchaseFeed')->name('purchase_delete');
+
         Route::get('/sale_feed', 'sale_feed')->name('sale_feed');
         
         Route::post('/store', 'store')->name('store');
