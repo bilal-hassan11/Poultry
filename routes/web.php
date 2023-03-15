@@ -313,6 +313,9 @@ Route::middleware('auth:admin')->prefix('web_admin')->name('admin.')->group(func
         Route::get('/delete-purchase-feed/{id}', 'deletePurchaseFeed')->name('purchase_delete');
 
         Route::get('/sale_feed', 'sale_feed')->name('sale_feed');
+        Route::post('/store-sale-feed', 'storeSaleFeed')->name('sale_store');
+        Route::get('/edit-sale-feed/{id}', 'editSaleFeed')->name('sale_edit');
+        Route::get('/delete-sale-feed/{id}', 'deleteSaleFeed')->name('sale_delete');
         
         Route::post('/store', 'store')->name('store');
         Route::get('/edit/{id}', 'edit')->name('edit');

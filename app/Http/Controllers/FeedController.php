@@ -14,6 +14,7 @@ use App\Models\AccountLedger;
 use App\Models\AccountType;
 use App\Models\Category;
 use App\Models\PurchaseFeed;
+use App\Models\SaleFeed;
 
 class FeedController extends Controller
 {
@@ -60,12 +61,12 @@ class FeedController extends Controller
         $data = array(
             'title'             => 'Purchase Chicks',
             'accounts'          => Account::latest()->get(),
-            'category'          => Category::with(['companies', 'items'])->where('name', 'Chick')->first(),
+            'category'          => Category::with(['companies', 'items'])->where('name', 'Feed')->first(),
             'purchase_feed'     => PurchaseFeed::with(['company:id,name','account:id,name','item:id,name'])->latest()->get(),
             'edit_feed'         => PurchaseFeed::findOrFail(hashids_decode($id)),
             'is_updatee'        => true
         );
-        return view('admin.chick.purchase_chick')->with($data);
+        return view('admin.feed.purchase_feed')->with($data);
     }
 
     public function deletePurchaseFeed($id){
@@ -79,10 +80,60 @@ class FeedController extends Controller
     public function sale_feed(Request $req){
         $data = array(
             'title'     => 'Sale Feeds',
-            'accounts'  => Account::latest()->get(),
-            
+            'accounts'          => Account::latest()->get(),
+            'category'          => Category::with(['companies', 'items'])->where('name', 'Chick')->first(),
+            'sale_feed'       => SaleFeed::with(['company:id,name','account:id,name','item:id,name'])->latest()->get(),            
         );
         return view('admin.feed.sale_feed')->with($data);
+    }
+
+    public function storeSaleFeed(PurchaseFeedRequest $req){
+        
+        $validated = $req->validated();
+        $item      = Item::findOrFail(hashids_decode($validated['item_id']));
+        
+        if(isset($validated['purchase_feed_id']) && !empty($validated['purchase_feed_id'])){//update the recrod
+            $purchase = SaleFeed::findOrFail(hashids_decode($validated['purchase_feed_id']));
+            $msg      = 'Sale feed updated successfully';
+        }else{//add new record
+            $purchase = new SaleFeed;
+            $msg      = 'Sale feed added successfully';
+        }
+        $purchase->date = $validated['date'];
+        $purchase->company_id   = (int) hashids_decode($validated['company_id']);
+        $purchase->item_id      = (int) hashids_decode($validated['item_id']);
+        $purchase->account_id   = (int) hashids_decode($validated['account_id']);
+        $purchase->rate         = (int) $item->price;
+        $purchase->quantity     = (int) $validated['quantity'];
+        $purchase->net_ammount  = (int) ($item->price * $validated['quantity']);
+        $purchase->status       = $validated['status'];
+        $purchase->remarks      = $validated['remarks'];
+        $purchase->save();
+
+        return response()->json([
+            'success'   => $msg,
+            'redirect'  => route('admin.feeds.sale_feed')
+        ]);
+    }
+
+    public function editSaleFeed($id){
+        $data = array(
+            'title'             => 'Sale Feed',
+            'accounts'          => Account::latest()->get(),
+            'category'          => Category::with(['companies', 'items'])->where('name', 'Feed')->first(),
+            'sale_feed'         => SaleFeed::with(['company:id,name','account:id,name','item:id,name'])->latest()->get(),            
+            'edit_feed'         => SaleFeed::findOrFail(hashids_decode($id)),
+            'is_updatee'        => true
+        );
+        return view('admin.feed.sale_feed')->with($data);
+    }
+    
+    public function deleteSaleFeed($id){
+        PurchaseFeed::destroy(hashids_decode($id));
+        return response()->json([
+            'success'   => 'Sale feed deleted successfully',
+            'reload'    => true
+        ]);
     }
 
     public function store(SaleRequest $req){

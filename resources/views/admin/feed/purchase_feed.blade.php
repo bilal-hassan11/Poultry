@@ -193,10 +193,10 @@
                             <td>{{ $purcahse->quantity }}</td>
                             <td>{{ $purcahse->net_ammount }}</td>
                             <td>
-                              <a href="{{ route('admin.feeds.sale_edit',['id'=>$purcahse->hashid]) }}" class="btn btn-primary btn-xs waves-effect waves-light"  >
+                              <a href="{{ route('admin.feeds.purchase_edit',['id'=>$purcahse->hashid]) }}" class="btn btn-primary btn-xs waves-effect waves-light"  >
                                   <i class="fas fa-edit"></i>
                               </a>
-                              <button type="button" onclick="ajaxRequest(this)" data-url="{{ route('admin.feeds.sale_delete', ['id'=>$purcahse->hashid]) }}"  class="btn btn-danger btn-xs waves-effect waves-light">
+                              <button type="button" onclick="ajaxRequest(this)" data-url="{{ route('admin.feeds.purchase_delete', ['id'=>$purcahse->hashid]) }}"  class="btn btn-danger btn-xs waves-effect waves-light">
                               <i class="fa-sharp fa-solid fa-plus"></i> &nbsp Post
                               </button>
                             </td>
