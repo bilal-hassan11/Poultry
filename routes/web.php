@@ -297,6 +297,10 @@ Route::middleware('auth:admin')->prefix('web_admin')->name('admin.')->group(func
     Route::controller(MedicineController::class)->prefix('medicine')->name('medicines.')->group(function(){
         Route::get('/', 'index')->name('index');
         Route::get('/purchase_medicine', 'purchase_medicine')->name('purchase_medicine');
+        Route::post('/store-purchase-medicine', 'storePurchaseMedicine')->name('purchase_store');
+        Route::get('/edit-purchase-medicine/{id}', 'editPurchaseMedicine')->name('purchase_edit');
+        Route::get('/delete-purchase-medicine/{id}', 'deletePurchaseChick')->name('purchase_delete');
+
         Route::get('/sale_medicine', 'sale_medicine')->name('sale_medicine');
         
         Route::post('/store', 'store')->name('store');
