@@ -15,4 +15,16 @@ class SaleMedicine extends Model
     // public function item(){
     //     return $this->belongsTo(Item::class, 'item_id', 'id');
     // }
+
+    public function company(){
+        return $this->belongsTo(Company::class, 'company_id', 'id');
+    }
+
+    public function item(){
+        return $this->belongsTo(Item::class, 'item_id', 'id');
+    }
+
+    public function account(){
+        return $this->belongsTo(Account::class, 'account_id', 'id');
+    }
 }
