@@ -17,12 +17,26 @@
                             <input type="date" class="form-control" name="date" id="date" value="{{ isset($is_update) ? date('Y-m-d', strtotime(@$edit_consumption->date)) : date('Y-m-d') }}" required>
                         </div>
                         <div class="col-md-4">
+                            <label for="">Category</label>
+                            <select class="form-control" name="category_id" id="category_id" required>
+                                <option value="">Select Category</option>
+                                @foreach($categories AS $cat)
+                                    <option value="{{ $cat->hashid }}" @if(@$edit_consumption->category_id == $cat->id) selected @endif>{{ $cat->name }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="col-md-4">
+                            <label for="">Companies</label>
+                            <select class="form-control" name="company_id" id="company_id" required>
+                                <option value="">Select Company</option>
+                                
+                            </select>
+                        </div>
+                        <div class="col-md-4">
                             <label for="">Items</label>
                             <select class="form-control" name="item_id" id="item_id" required>
                                 <option value="">Select Item</option>
-                                @foreach($items AS $item)
-                                    <option value="{{ $item->hashid }}" @if(@$edit_consumption->item_id == $item->id) selected @endif>{{ $item->name }}</option>
-                                @endforeach
+                                
                             </select>
                         </div>
                         <div class="col-md-4">
@@ -115,4 +129,42 @@
 
 @section('page-scripts')
 @include('admin.partials.datatable')
+
+
+<script>
+
+    //get All Companies
+    $('#category_id').change(function(){
+        var id = $(this).val();
+        var route = "{{ route('admin.common.companies', ':id') }}";
+        route     = route.replace(':id', id);
+        
+        getAjaxRequests(route, '', 'GET', function(resp){
+            $('#company_id').html(resp.html);
+        });
+    });
+
+    //get All Companies
+    $('#company_id').change(function(){
+        var id = $(this).val();
+        var route = "{{ route('admin.common.items', ':id') }}";
+        route     = route.replace(':id', id);
+        
+        getAjaxRequests(route, '', 'GET', function(resp){
+            $('#item_id').html(resp.html);
+        });
+    });
+
+    
+
+    $('#grand_parent_id').change(function(){
+        var id = $(this).val();
+        var route = "{{ route('admin.common.get_parent_account', ':id') }}";
+        route     = route.replace(':id', id);
+        
+        getAjaxRequests(route, '', 'GET', function(resp){
+            $('#parent_id').html(resp.html);
+        });
+    });
+</script>
 @endsection

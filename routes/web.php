@@ -257,6 +257,9 @@ Route::middleware('auth:admin')->prefix('web_admin')->name('admin.')->group(func
     //common functions routes
     Route::controller(CommonController::class)->name('common.')->group(function(){
         Route::get('/get-parent-accounts/{id}', 'getParentAccounts')->name('get_parent_account');
+        Route::get('/companies/{id}', 'get_companies')->name('companies');
+        Route::get('/items/{id}', 'get_items')->name('items');
+    
     });
 
 

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\ConsumptionRequest;
 use App\Models\Consumption;
 use App\Models\Item;
+use App\Models\Category;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
@@ -14,6 +15,7 @@ class ConsumptionController extends Controller
         $data = array(
             'title'         => 'Consumption',
             'items'         => Item::latest()->get(),
+            'categories'         => Category::latest()->get(),
             'consumptions'  => Consumption::with(['item'])
                                 ->when(isset($req->item_id), function($query) use ($req){
                                     $query->where('item_id', hashids_decode($req->item_id));
