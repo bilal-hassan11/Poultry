@@ -299,10 +299,13 @@ Route::middleware('auth:admin')->prefix('web_admin')->name('admin.')->group(func
         Route::get('/purchase_medicine', 'purchase_medicine')->name('purchase_medicine');
         Route::post('/store-purchase-medicine', 'storePurchaseMedicine')->name('purchase_store');
         Route::get('/edit-purchase-medicine/{id}', 'editPurchaseMedicine')->name('purchase_edit');
-        Route::get('/delete-purchase-medicine/{id}', 'deletePurchaseChick')->name('purchase_delete');
+        Route::get('/delete-purchase-medicine/{id}', 'deletePurchaseMedicine')->name('purchase_delete');
 
         Route::get('/sale_medicine', 'sale_medicine')->name('sale_medicine');
-        
+        Route::post('/store-sale-medicine', 'storeSaleMedicine')->name('sale_store');
+        Route::get('/edit-sale-medicine/{id}', 'editSaleMedicine')->name('sale_edit');
+        Route::get('/delete-sale-medicine/{id}', 'deleteSaleChick')->name('sale_delete');
+
         Route::post('/store', 'store')->name('store');
         Route::get('/edit/{id}', 'edit')->name('edit');
         Route::get('/delete/{id}', 'delete')->name('delete');
