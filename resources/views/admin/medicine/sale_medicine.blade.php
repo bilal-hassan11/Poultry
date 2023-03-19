@@ -18,36 +18,13 @@
               
               <br />
               
-              <form class="ajaxForm" role="form" action="{{ route('admin.medicines.sale_store') }}" method="POST">
+              <form class="ajaxForm" action="{{ route('admin.medicines.sale_store') }}" method="POST">
               @csrf
                 <div class="row">
                   <div class="col-md-3">
                     <div class="form-group">
                       <label>Date</label>
                       <input class="form-control" type="date" name="date" value="{{ (isset($is_update)) ? date('Y-m-d', strtotime($edit_medicine->date)) : date('Y-m-d') }}" required>
-                    </div>
-                  </div>
-                  <div class="col-md-3">
-                    <div class="form-group">
-                      <label>Company(All Chicks Companies) </label>
-                      <select class="form-control select2" name="company_id" id="company_id">
-                        <option value="">Select Company</option>
-                        @foreach($category->companies AS $company)
-                          <option value="{{ $company->hashid }}" @if(@$edit_medicine->company_id == $company->id) selected @endif>{{ $company->name }}</option>
-                        @endforeach
-                      </select>
-                    </div>
-                  </div>
-
-                  <div class="col-md-3">
-                    <div class="form-group">
-                      <label>Item (selectd Companies Item)</label>
-                      <select class="form-control select2" name="item_id" id="item_id">
-                        <option value="">Select Item</option>
-                        @foreach($category->items AS $item)
-                          <option value="{{ $item->hashid }}" data-price="{{ $item->price }}" @if(@$edit_medicine->item_id == $item->id) selected @endif>{{ $item->name }}</option>
-                        @endforeach
-                      </select>
                     </div>
                   </div>
 
@@ -72,12 +49,7 @@
                       <input class="form-control" name="rate" id="rate" readonly value="{{ @$edit_medicine->rate }}" required>
                     </div>
                   </div>
-                  <div class="col-md-3">
-                    <div class="form-group">
-                      <label>Quantity</label>
-                      <input class="form-control" name="quantity" id="quantity" value="{{ @$edit_medicine->quantity }}" required>
-                    </div>
-                  </div>
+
                   <div class="col-md-3">
                     <div class="form-group">
                       <label>Purchase Ammount</label>
@@ -120,6 +92,41 @@
                     </div>
                   </div>
                   
+                  <div class="col-md-3">
+                    <div class="form-group">
+                      <label>Company(All Chicks Companies) </label>
+                      <select class="form-control select2 company_id" name="company_id[]" id="company_id">
+                        <option value="">Select Company</option>
+                        @foreach($category->companies AS $company)
+                          <option value="{{ $company->hashid }}" @if(@$edit_medicine->company_id == $company->id) selected @endif>{{ $company->name }}</option>
+                        @endforeach
+                      </select>
+                    </div>
+                  </div>
+
+                  <div class="col-md-3">
+                    <div class="form-group">
+                      <label>Item (selectd Companies Item)</label>
+                      <select class="form-control select2 item_id" name="item_id[]" id="item_id">
+                        <option value="">Select Item</option>
+                        @foreach($category->items AS $item)
+                          <option value="{{ $item->hashid }}" data-price="{{ $item->price }}" @if(@$edit_medicine->item_id == $item->id) selected @endif>{{ $item->name }}</option>
+                        @endforeach
+                      </select>
+                    </div>
+                  </div>
+                  <div class="col-md-3">
+                    <div class="form-group">
+                      <label>Quantity</label>
+                      <input class="form-control quantity" name="quantity[]" id="quantity" value="{{ @$edit_medicine->quantity }}" required>
+                    </div>
+                  </div>
+                  <div class="col-md-3">
+                    <button type="button" class="btn btn-primary mt-3" id="add_row_btn">+</button>
+                  </div>
+                </div>
+                <div class="row append_row">
+                  
                 </div>
                 <div class="row">
                     <div class="col-md-12 form-group">
@@ -129,8 +136,7 @@
                 </div>
                 <input type="hidden" name="purchase_medicine_id" value="{{ @$edit_medicine->hashid }}">
                 <input type="submit" class="btn btn-primary" value="{{ (isset($is_update)) ? 'Update' : 'Add' }}">
-
-              </form>
+            </form>
               
               
               <br /><br />
@@ -204,10 +210,10 @@
                     <thead>
                         <tr class="text-dark">
                             <th>Account Name</th>
-                            <th>Company Name</th>
-                            <th>Item</th>
+                            {{-- <th>Company Name</th>
+                            <th>Item</th> --}}
                             <th>Rate</th>
-                            <th>Quantity</th>
+                            {{-- <th>Quantity</th> --}}
                             <th>Net Ammount</th>
                             <th>Action</th>
                         </tr>
@@ -216,10 +222,10 @@
                       @foreach($sale_medicines AS $sale) 
                         <tr>
                           <td>{{ $sale->account->name }}</td>
-                          <td>{{ $sale->company->name }}</td>
-                          <td>{{ $sale->item->name }}</td>
+                          {{-- <td>{{ $sale->company->name }}</td>
+                          <td>{{ $sale->item->name }}</td> --}}
                           <td>{{ $sale->rate }}</td>
-                          <td>{{ $sale->quantity }}</td>
+                          {{-- <td>{{ $sale->quantity }}</td> --}}
                           <td>{{ $sale->net_ammount }}</td>
                           <td>
                             <a href="{{ route('admin.medicines.sale_edit',['id'=>$sale->hashid]) }}" class="btn btn-primary btn-xs waves-effect waves-light"  >
@@ -270,35 +276,103 @@
     }
   });
 
-  $('#item_id').change(function(){
-    $('#rate').val($(this).find(':selected').data('price'));
+  // $('.item_id').change(function(){
+  //   getItemsPrice();
+  //   // alert('done');
+  //   // $('#rate').val($(this).find(':selected').data('price'));
+  //   // calculate_net_amount();
+  // });
+  $(document).on('change', '.item_id', function(){
     calculate_net_amount();
   });
-  //calculate net amount
-  function calculate_net_amount(){
-    var price      = $('#item_id').find(':selected').data('price')
-    var quantity   = $('#quantity').val();
-    var discount   = $('#discount').val();
-    var commission = $('#commission').val();
-    
-    if(price != '' &&  quantity != '' && discount != '' && commission != ''){//if both values are set the put net amount in input field
-      var total             = (price*quantity);
-      var total_commission  = (total*commission)/100;
-      var total_discount    = (discount*quantity);
-      $('#net_ammount').val(total-(total_commission+total_discount));
-      $('#commission').val(total_commission);
-      $('#discount').val(total_discount);
-    }
-  }
+
   //when there is change in account then put the commissiona and discount in fields
   $('#account_id').change(function(){
-    $('#commission').val(($(this).find(':selected').data('commission')));
-    $('#discount').val(($(this).find(':selected').data('discount')));
+    $('#commission').attr('com', ($(this).find(':selected').data('commission')));
+    $('#discount').attr('dis', ($(this).find(':selected').data('discount')));
     calculate_net_amount();
   });
 //when there is change in quantity calculate total amount
-$(document).on('keypress', '#quantity', function(){
+$(document).on('keypress', '.quantity', function(){
   calculate_net_amount();
 });
+$('#add_row_btn').click(function(){
+  var html = '<div class="row"><div class="col-md-3">'+
+                    '<div class="form-group">'+
+                      '<label>Company(All Chicks Companies) </label>'+
+                      '<select class="form-control select2 company_id" name="company_id[]" id="company_id">'+
+                        '<option value="">Select Company</option>';
+                        @foreach($category->companies AS $company)
+                          html +='<option value="{{ $company->hashid }}">{{ $company->name }}</option>';
+                        @endforeach
+    html+=             '</select>'+
+                    '</div>'+
+                  '</div>'+
+                  '<div class="col-md-3">'+
+                    '<div class="form-group">'+
+                      '<label>Item (selectd Companies Item)</label>'+
+                      '<select class="form-control select2 item_id" name="item_id[]" id="item_id">'+
+                        '<option value="">Select Item</option>';
+                        @foreach($category->items AS $item)
+                          html += '<option value="{{ $item->hashid }}" data-price="{{ $item->price }}">{{ $item->name }}</option>';
+                        @endforeach
+    html+=            '</select>'+
+                    '</div>'+
+                  '</div>'+
+                  '<div class="col-md-3">'+
+                    '<div class="form-group">'+
+                      '<label>Quantity</label>'+
+                      '<input class="form-control quantity" name="quantity[]" id="quantity" value="" required>'+
+                    '</div>'+
+                  '</div>'+
+                  '<div class="col-md-3">'+
+                     '<button type="button" class="btn btn-danger">x</button>'+
+                  '</div></div>';
+  $('.append_row').append(html);
+});
+//calculate net amount
+function calculate_net_amount(){
+
+  var price      = getItemsPrice();
+  var quantity   = getQuantity();
+  var discount   = $('#discount').attr('dis');
+  var commission = $('#commission').attr('com');
+  var total      = 0;
+  var total_quantity = 0;
+  $.each(price, function(index,item_price){
+    total          = total+eval(parseInt((parseInt(item_price) * parseInt(quantity[index]))));
+    total_quantity = total_quantity+eval(parseInt(quantity[index]));
+  });
+
+  if(!isNaN(total) && discount != '' && commission != ''){//if both values are set the put net amount in input field
+    console.log(total);
+    console.log(total_quantity);
+    // var total             = (price*quantity);
+    var total_commission  = (total*commission)/100;
+    var total_discount    = (discount*total_quantity);
+    // console.log(total_commission);
+    // console.log(total_discount);
+    $('#net_ammount').val(total-(total_commission+total_discount));
+    $('#commission').val(total_commission);
+    $('#discount').val(total_discount);
+  }
+}
+//get selected item prices
+function getItemsPrice(){
+  var price_arr = [];
+  $('.item_id').each(function(){
+    // console.log($(this).find(':selected').data('price'));
+    price_arr.push($(this).find(':selected').data('price'));
+  });
+  return price_arr;
+}
+//get quantiy  of item
+function getQuantity(){
+  var quantity_arr = [];
+  $('.quantity').each(function(){
+    quantity_arr.push($(this).val());
+  });
+  return quantity_arr;
+}
 </script>
 @endsection
