@@ -205,6 +205,7 @@ Route::middleware('auth:admin')->prefix('web_admin')->name('admin.')->group(func
         Route::get('/edit-purchase/{id}', 'editPurchase')->name('edit_purchase');
         Route::post('/update-purchase', 'updatePurchase')->name('update_purchase');
     });
+
     //report routes
     Route::controller(ReportController::class)->prefix('report')->name('reports.')->group(function(){
         Route::get('/item', 'itemReport')->name('item');
@@ -234,6 +235,7 @@ Route::middleware('auth:admin')->prefix('web_admin')->name('admin.')->group(func
 
 
     });
+
     //formulation routes
     Route::controller(FormulationController::class)->prefix('formulation')->name('formulations.')->group(function(){
         Route::get('/', 'index')->name('index');
@@ -255,6 +257,7 @@ Route::middleware('auth:admin')->prefix('web_admin')->name('admin.')->group(func
     //     Route::get('/outward-pdf', 'outwardReportPdf')->name('outward_pdf');
         
     // });
+
     //common functions routes
     Route::controller(CommonController::class)->name('common.')->group(function(){
         Route::get('/get-parent-accounts/{id}', 'getParentAccounts')->name('get_parent_account');
@@ -310,6 +313,9 @@ Route::middleware('auth:admin')->prefix('web_admin')->name('admin.')->group(func
         Route::post('/store-sale-medicine', 'storeSaleMedicine')->name('sale_store');
         Route::get('/edit-sale-medicine/{id}', 'editSaleMedicine')->name('sale_edit');
         Route::get('/delete-sale-medicine/{id}', 'deleteSaleChick')->name('sale_delete');
+
+        Route::get('/invoice', 'sale_medicine_invoice')->name('sale_medicine_invoice');
+
 
         Route::post('/store', 'store')->name('store');
         Route::get('/edit/{id}', 'edit')->name('edit');

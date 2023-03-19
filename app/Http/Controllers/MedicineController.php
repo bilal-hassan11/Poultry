@@ -30,6 +30,14 @@ class MedicineController extends Controller
         return view('admin.medicine.purchase_medicine')->with($data);
     }
 
+    public function sale_medicine_invoice(Request $req){
+        $data = array(
+            'title'     => 'Medicine Invoice',
+            
+        );
+        return view('admin.medicine.invoice')->with($data);
+    }
+
     public function storePurchaseMedicine(PurchaseMedicineRequest $req){
         
         $validated = $req->validated();
