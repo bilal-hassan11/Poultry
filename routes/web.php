@@ -4,13 +4,13 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\AccountController;
 use App\Http\Controllers\Administrator\AccountTypeController;
 use App\Http\Controllers\Administrator\CategoryController;
-use App\Http\Controllers\SalesController;
+use App\Http\Controllers\SaleMurghiController;
 
 use App\Http\Controllers\DetailViewController;  
 use App\Http\Controllers\CompanyController;
 
 use App\Http\Controllers\Administrator\OrderController;
-use App\Http\Controllers\PurchaseController;
+use App\Http\Controllers\PurchaseMurghiController;
 use App\Http\Controllers\CashController;
 use App\Http\Controllers\Administrator\HomeController;
 use App\Http\Controllers\Administrator\StaffController;
@@ -170,8 +170,18 @@ Route::middleware('auth:admin')->prefix('web_admin')->name('admin.')->group(func
         Route::get('/delete/{id}', 'delete')->name('delete');
     });
 
+    //Cash Book routes
+    Route::controller(CashController::class)->prefix('cash')->name('cash.')->group(function(){
+        Route::get('/', 'index')->name('index');
+        Route::post('/store', 'store')->name('store');
+        Route::get('/edit/{id}', 'edit')->name('edit');
+        Route::get('/delete/{id}', 'delete')->name('delete');
+        Route::get('/get-parent-accounts/{id}', 'getParentAccounts')->name('get_parent_accounts');
+    });
+
+
     //Sales BooK routes
-    Route::controller(SalesController::class)->prefix('sale')->name('sales.')->group(function(){
+    Route::controller(SaleMurghiController::class)->prefix('sale_murghi')->name('sale_murghis.')->group(function(){
         Route::get('/', 'index')->name('index');
         Route::post('/store', 'store')->name('store');
         Route::get('/edit/{id}', 'edit')->name('edit');
@@ -184,17 +194,8 @@ Route::middleware('auth:admin')->prefix('web_admin')->name('admin.')->group(func
         Route::get('/delete_sale/{id}', 'deleteSale')->name('delete_sale');
     });
 
-    //Cash Book routes
-    Route::controller(CashController::class)->prefix('cash')->name('cash.')->group(function(){
-        Route::get('/', 'index')->name('index');
-        Route::post('/store', 'store')->name('store');
-        Route::get('/edit/{id}', 'edit')->name('edit');
-        Route::get('/delete/{id}', 'delete')->name('delete');
-        Route::get('/get-parent-accounts/{id}', 'getParentAccounts')->name('get_parent_accounts');
-    });
-
-    //Purchase Book routes
-    Route::controller(PurchaseController::class)->prefix('purchase')->name('purchases.')->group(function(){
+    //Purchase Murghi routes
+    Route::controller(PurchaseMurghiController::class)->prefix('purchase_murghi')->name('purchase_murghis.')->group(function(){
         Route::get('/', 'index')->name('index');
         Route::post('/store', 'store')->name('store');
         Route::get('/edit/{id}', 'edit')->name('edit');
@@ -259,6 +260,7 @@ Route::middleware('auth:admin')->prefix('web_admin')->name('admin.')->group(func
         Route::get('/get-parent-accounts/{id}', 'getParentAccounts')->name('get_parent_account');
         Route::get('/companies/{id}', 'get_companies')->name('companies');
         Route::get('/items/{id}', 'get_items')->name('items');
+        Route::get('/flocks/{id}', 'get_flocks')->name('flocks');
     
     });
 

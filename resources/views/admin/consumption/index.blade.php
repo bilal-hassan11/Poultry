@@ -7,8 +7,8 @@
         <div class="card">
             <div class="card-body">
                 <div class="d-flex align-items-center justify-content-between">
-                    <h4 class="header-title"> Consumption</h4>
-                </div>
+                    <h2 class="header-title">Flock Items Consumption</h2>
+                </div><br /><br /><br />
                 <form action="{{ route('admin.consumptions.store') }}" class="ajaxForm" method="POST">
                     @csrf
                     <div class="row">
@@ -17,29 +17,47 @@
                             <input type="date" class="form-control" name="date" id="date" value="{{ isset($is_update) ? date('Y-m-d', strtotime(@$edit_consumption->date)) : date('Y-m-d') }}" required>
                         </div>
                         <div class="col-md-4">
+                            <label for="">Shade</label>
+                            <select class="form-control select2" name="shade_id" id="shade_id" required>
+                                <option value="">Select Shade</option>
+                                @foreach($shades AS $s)
+                                    <option value="{{ $s->hashid }}" @if(@$edit_consumption->shade_id == $s->id) selected @endif>{{ $s->name }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="col-md-3">
+                            <label for="">Flocks</label>
+                            <select class="form-control select2" name="flock_id" id="flock_id" required>
+                                <option value="">Select Flock</option>
+                                
+                            </select>
+                        </div>
+                    </div><br />    
+                    <div class="row">
+                        <div class="col-md-3">
                             <label for="">Category</label>
-                            <select class="form-control" name="category_id" id="category_id" required>
+                            <select class="form-control select2" name="category_id" id="category_id" required>
                                 <option value="">Select Category</option>
                                 @foreach($categories AS $cat)
                                     <option value="{{ $cat->hashid }}" @if(@$edit_consumption->category_id == $cat->id) selected @endif>{{ $cat->name }}</option>
                                 @endforeach
                             </select>
                         </div>
-                        <div class="col-md-4">
+                        <div class="col-md-3">
                             <label for="">Companies</label>
-                            <select class="form-control" name="company_id" id="company_id" required>
+                            <select class="form-control select2" name="company_id" id="company_id" required>
                                 <option value="">Select Company</option>
                                 
                             </select>
                         </div>
-                        <div class="col-md-4">
+                        <div class="col-md-3">
                             <label for="">Items</label>
-                            <select class="form-control" name="item_id" id="item_id" required>
+                            <select class="form-control select2" name="item_id" id="item_id" required>
                                 <option value="">Select Item</option>
                                 
                             </select>
                         </div>
-                        <div class="col-md-4">
+                        <div class="col-md-3">
                             <label for="">Quantity</label>
                             <input type="number" class="form-control" name="quantity" id="quantity" value="{{ @$edit_consumption->qunantity }}" required>
                         </div>
@@ -90,10 +108,9 @@
                     <h4 class="header-title">Consumption</h4>
                     {{-- <a href="{{ route('admin.staffs.add') }}" class="btn btn-primary">Add Ac</a> --}}
                 </div>
-                <p class="sub-header">Following is the list of all the consumptions.</p>
                 <table  class="table text-fade table-bordered table-hover display nowrap margin-top-10 w-p100" id="example">
                     <thead>
-                        <tr>
+                        <tr class="text-dark">
                             <th >S.No</th>
                             <th>Item</th>
                             <th>Quantity</th>
@@ -103,16 +120,17 @@
                     </thead>
                     <tbody>
                         @foreach($consumptions AS $consumption)
-                            <tr>
+                            <tr class="text-dark">
                                 <td>{{ $loop->iteration }}</td>
                                 <td>{{ $consumption->item->name }}</td>
                                 <td>{{ $consumption->qunantity}}</td>
                                 <td>{{ date('d-M-Y', strtotime($consumption->date)) }}</td>
                                 <td >
-                                    <a href="{{route('admin.consumptions.edit', $consumption->hashid)}}" class="btn btn-warning btn-xs waves-effect waves-light">
-                                        <i class="fas fa-edit"></i>
+                                    <a href="{{route('admin.consumptions.edit', $consumption->hashid)}}" >
+                                        <i                                 <span class="waves-effect waves-light btn btn-rounded btn-primary-light"><i class="fas fa-edit"></i></span>
+
                                     </a>
-                                    <button type="button" onclick="ajaxRequest(this)" data-url="{{ route('admin.consumptions.delete', $consumption->hashid) }}"  class="btn btn-danger btn-xs waves-effect waves-light">
+                                    <button type="button" onclick="ajaxRequest(this)" data-url="{{ route('admin.consumptions.delete', $consumption->hashid) }}"  class="waves-effect waves-light btn btn-rounded btn-primary-lightt">
                                         <i class="fas fa-trash"></i>
                                     </button>
                                 </td>
@@ -134,6 +152,17 @@
 <script>
 
     //get All Companies
+    $('#shade_id').change(function(){
+        var id = $(this).val();
+        var route = "{{ route('admin.common.flocks', ':id') }}";
+        route     = route.replace(':id', id);
+        
+        getAjaxRequests(route, '', 'GET', function(resp){
+            $('#flock_id').html(resp.html);
+        });
+    });
+
+    //get All Companies
     $('#category_id').change(function(){
         var id = $(this).val();
         var route = "{{ route('admin.common.companies', ':id') }}";
@@ -143,6 +172,7 @@
             $('#company_id').html(resp.html);
         });
     });
+
 
     //get All Companies
     $('#company_id').change(function(){

@@ -15,4 +15,8 @@ class Shade extends Model
     public function staff(){
         return $this->belongsTo(Staff::class, 'staff_id', 'id');
     }
+
+    public function flock(){
+        return $this->belongsTo(Flock::class, 'flock_id', 'id');
+    }
 }

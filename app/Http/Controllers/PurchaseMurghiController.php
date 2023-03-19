@@ -4,36 +4,24 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\PurchaseRequest;
 use App\Models\Account;
-use App\Models\Inward;
 use App\Models\Item;
-use App\Models\PurchaseBook;
+use App\Models\PurchaseMurghi;
 use App\Models\AccountLedger;
 use App\Models\AccountType;
 use Illuminate\Http\Request;
 
-class PurchaseController extends Controller
+class PurchaseMurghiController extends Controller
 {
     public function index(Request $req){
         $data = array(
             'title'     => 'Purchase Book',
             'accounts'  => Account::latest()->get(),
-            'items'     => Item::latest()->get(),
-            // 'purchases' => PurchaseBook::with(['account', 'item'])->latest()->get(),
-            'inwards'   => Inward::with(['account', 'item'])
-                                    ->when(isset($req->parent_id), function($query) use ($req){
-                                        $query->where('account_id', hashids_decode($req->parent_id));
-                                    })
-                                    ->when(isset($req->vehicle_no), function($query) use ($req){
-                                        $query->where('vehicle_no', $req->vehicle_no);
-                                    })
-                                    ->when(isset($req->from_date, $req->to_date), function($query) use ($req){
-                                        $query->whereBetween('date', [$req->from_date, $req->to_date]);
-                                    })
-                                    ->latest()->get(),
+            'items'     => Item::where('type','purchase')->latest()->get(),
+            
             'account_types' => AccountType::whereNull('parent_id')->get(), 
 
         );
-        return view('admin.purchase_book.add_purchase')->with($data);
+        return view('admin.murghi.add_purchase')->with($data);
     }
 
     public function add(){
@@ -43,25 +31,28 @@ class PurchaseController extends Controller
     public function store(PurchaseRequest $req){
         //dd($req->purchase_id);
         if(check_empty($req->purchase_id)){
-            $purchase = PurchaseBook::findOrFail(hashids_decode($req->purchase_id));
+            $purchase = PurchaseMurghi::findOrFail(hashids_decode($req->purchase_id));
             $msg      = 'Purchase udpated successfully';
         }else{
-            $purchase = new PurchaseBook();
+            $purchase = new PurchaseMurghi();
             $msg      = 'Purchase added successfully';
         }
         
-        $purchase->date              = $req->purchase_date;
+        $purchase->date              = $req->date;
         $purchase->vehicle_no        = $req->vehicle_no;
         $purchase->bilty_no          = $req->bilty_no;
-        $purchase->pro_inv_no        = $req->prod_inv_no;
         $purchase->account_id        = hashids_decode($req->account_id);
         $purchase->item_id           = hashids_decode($req->item_id);
-        $purchase->company_weight    = $req->company_weight;
-        $purchase->party_weight      = $req->party_weight;
+        $purchase->no_of_crate       = $req->no_of_crate;
+        $purchase->quantity          = $req->quantity;
+        $purchase->net_weight        = $req->net_weight;
+        $purchase->average           = $req->average;
         $purchase->weight_difference = $req->weight_difference;
         $purchase->posted_weight     = $req->posted_weight;
-        $purchase->bag_rate          = $req->rate;
+        $purchase->rate              = $req->rate;
         $purchase->fare              = $req->fare;
+        $purchase->gross_ammount     = $req->gross_ammount;
+        $purchase->other_charges     = $req->other_charges;
         $purchase->net_ammount       = $req->net_ammount;
         $purchase->remarks           = $req->remarks;
         $purchase->save();
@@ -69,27 +60,21 @@ class PurchaseController extends Controller
         //Account Ledger
         $accountledger = new AccountLedger();
         
-        $item = Item::findOrFail(hashids_decode($req->item_id));
-        $item_name = $item->name;
-
-        $account = Account::findOrFail(hashids_decode($req->account_id));
-        $account_name = $account->name;
-
-        $id = PurchaseBook::latest('created_at')->first();
+        $id = PurchaseMurghi::with('item','account')->latest('created_at')->first();
         $accountledger->account_id = hashids_decode($req->account_id);
         $accountledger->sale_id          = 0;
         $accountledger->purchase_id      = $id->id;
         $accountledger->cash_id          = 0;
         $accountledger->debit            = 0;
         $accountledger->credit           = $req->net_ammount ;
-        $accountledger->description      = 'Vehicle #'. $req->vehicle_no . ', Bilty # '.$req->bilty_no .',  Item:'.$item_name .',  Weight:'.$req->company_weight.'kg'.',  Posted Weight:'.$req->posted_weight.'kg'.',  Account #'.'['.$account->id.']'.$account->name;
+        $accountledger->description      = 'Account Name:'.$id->account->name." , ".'Item Name:'.$id->item->name . ' ,'.$req->vehicle_no . ' '. 'Total Crate '.$req->no_of_crate. '  , '. 'Total Murghi   '.$req->quantity.'Kg';
         $accountledger->save();
     
-        Item::find(hashids_decode($req->item_id))->increment('stock_qty', $req->company_weight);//increment item stock
+        Item::find(hashids_decode($req->item_id))->increment('stock_qty', $req->quantity);//increment item stock
         
         return response()->json([
             'success'   => $msg,
-            'redirect'    => route('admin.purchases.index')
+            'redirect'    => route('admin.purchase_murghi.index')
         ]);
         
     }
@@ -99,7 +84,7 @@ class PurchaseController extends Controller
             'title'     => 'Purchase Book',
             'accounts'  => Account::latest()->get(),
             'items'     => Item::latest()->get(),
-            'purchases' => PurchaseBook::with(['account', 'item'])->latest()->get(),
+            'purchases' => PurchaseMurghi::with(['account', 'item'])->latest()->get(),
             'edit_purchase' => Inward::with(['item'])->findOrFail(hashids_decode($id)),
             'inwards'   => Inward::with(['account', 'item'])->latest()->get(),
             'is_update'     => true
@@ -108,7 +93,7 @@ class PurchaseController extends Controller
     }
 
     public function delete($id){
-        PurchaseBook::destroy(hashids_decode($id));
+        PurchaseMurghi::destroy(hashids_decode($id));
         return response()->json([
             'success'   => 'Purcahase deleted successfully',
             'reload'    => true
@@ -117,7 +102,7 @@ class PurchaseController extends Controller
 
     // public function migrateToPurchase($id){
     //     $inward          = Inward::findOrFail(hashids_decode($id));
-    //     $purchase        = new PurchaseBook;
+    //     $purchase        = new PurchaseMurghi;
     //     $purchase_amount = $inward->item->price * $inward->	company_weight;
     //     $commission      = $purchase_amount * $inward->account->commission;
     //     $discount        = $inward->no_of_bags * $inward->account->discount;
@@ -153,7 +138,7 @@ class PurchaseController extends Controller
         $item_name = $item->name;
         $item_rate = $item->price;
 
-        $purchase        = new PurchaseBook;
+        $purchase        = new PurchaseMurghi;
         $purchase_amount = $inward->item->price * $inward->	company_weight;
         $get_commission = ($inward->account->commission /100) *  $purchase_amount ;
         $get_discount = $inward->account->discount * $inward->no_of_bags;
@@ -190,7 +175,7 @@ class PurchaseController extends Controller
         $account = Account::findOrFail($inward->account_id);
         $account_name = $account->name;
 
-        $id = PurchaseBook::latest('created_at')->first();
+        $id = PurchaseMurghi::latest('created_at')->first();
         $accountledger->account_id = $inward->account_id;
         $accountledger->sale_id          = 0;
         $accountledger->purchase_id      = $id->id;
@@ -211,7 +196,7 @@ class PurchaseController extends Controller
     public function allPurchase(){
         $data = array(
             'title' => 'All purchase',
-            'purchases'  => PurchaseBook::with(['inward.item'])->latest()->get(),
+            'purchases'  => PurchaseMurghi::with(['inward.item'])->latest()->get(),
         );
         // dd($data['purchases'][0]);
         return view('admin.purchase_book.all_purchase')->with($data);
@@ -220,8 +205,8 @@ class PurchaseController extends Controller
     public function editPurchase($id){
         $data = array(
             'title'         => 'Edit purchase',
-            'purchases'     => PurchaseBook::with(['inward.item'])->latest()->get(),
-            'edit_purchase' => PurchaseBook::findOrFail(hashids_decode($id)),
+            'purchases'     => PurchaseMurghi::with(['inward.item'])->latest()->get(),
+            'edit_purchase' => PurchaseMurghi::findOrFail(hashids_decode($id)),
             'accounts'      => Account::latest()->get(),
             'is_update'     => true  
         );
@@ -230,7 +215,7 @@ class PurchaseController extends Controller
 
     public function updatePurchase(Request $req){
         
-        $sale = PurchaseBook::findOrFail(hashids_decode($req->purchase_book_id));
+        $sale = PurchaseMurghi::findOrFail(hashids_decode($req->purchase_book_id));
         $sale->date             = $req->date;
         $sale->pro_inv_no       = $req->pro_inv_no;
         $sale->vehicle_no       = $req->vehicle_no;

@@ -44,7 +44,7 @@
 
                         <div class="col-md-4 form-group">
                             <label for="">Item Unit</label>
-                            <input type="number" class="form-control" placeholder="0" value="{{ @$edit_item->unit }}" min="0" name="unit" id="price" required>
+                            <input type="text" class="form-control" placeholder="0" value="{{ @$edit_item->unit }}"  name="unit"  required>
 
                         </div>
 

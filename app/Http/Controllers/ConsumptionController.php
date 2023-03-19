@@ -6,6 +6,8 @@ use App\Http\Requests\ConsumptionRequest;
 use App\Models\Consumption;
 use App\Models\Item;
 use App\Models\Category;
+use App\Models\Shade;
+
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
@@ -16,6 +18,8 @@ class ConsumptionController extends Controller
             'title'         => 'Consumption',
             'items'         => Item::latest()->get(),
             'categories'         => Category::latest()->get(),
+            'shades'         => Shade::latest()->get(),
+
             'consumptions'  => Consumption::with(['item'])
                                 ->when(isset($req->item_id), function($query) use ($req){
                                     $query->where('item_id', hashids_decode($req->item_id));

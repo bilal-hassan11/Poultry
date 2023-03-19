@@ -71,6 +71,20 @@
 			  </ul>	
 		</li>
 
+		<!-- Murghi -->
+		<li>
+			<a href="#">
+			<i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>
+				<span> Murghi </span>
+			</a>
+			<ul>
+					<li>
+						<a href="{{route('admin.purchase_murghis.index')}}"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>Purchase Murghi</a>
+						<a href="{{route('admin.sale_murghis.index')}}"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>Sale Murghi</a>
+					</li>
+			  </ul>	
+		</li>
+
 		<!-- Company -->
 		<li>
 			<a href="{{route('admin.companys.index')}}">
@@ -96,26 +110,7 @@
 			</a>
 		</li>
 
-		<li>
-			<a href="#">
-				<i data-feather="home"></i>
-				<span> Sales BooK </span>
-			</a>
-			<ul>
-				<li>
-					<a href="{{route('admin.sales.index')}}">
-						<i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>
-						<span> All Sales </span>
-					</a>
-				</li>
-				<li>
-					<a href="{{route('admin.sales.all_sales')}}">
-						<i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>
-						<span>  Sales Book </span>
-					</a>
-				</li>
-			</ul>
-		</li>
+		
 		<li><a href="#"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>Ledger</a>
 			  <ul>
 					<li>
@@ -127,17 +122,7 @@
 					</li>
 			  </ul>			  
 			</li> 
-		<li><a href="#"><i data-feather="box"></i>Purchase BooK</a>			
-		  <ul>
-						
-			<li><a href="{{route('admin.purchases.index')}}"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>Purchase BooK</a>
-			<li>
-			<li><a href="{{route('admin.purchases.all_purchase')}}"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>All Purchases</a>
-			
-			</li>		
-			
-		  </ul>		  
-		</li>
+		
 		<li><a href="#"><i data-feather="lock"></i>Staff &amp; Permission</a>
 		  <ul>
 			<li><a href="{{route('admin.staffs.all')}}"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>Staff</a>

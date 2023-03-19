@@ -14,7 +14,7 @@
             <div class="item_row">
               <div class="row">
               </div>
-              <h1>Purchase Medicine Details</h1><br />
+              <h1>Sale Medicine Details</h1><br />
               
               <br />
               
@@ -110,7 +110,7 @@
                   <div class="col-md-3">
                     <div class="form-group">
                       <label>Other Charges</label>
-                      <input class="form-control" name="other_charges" value="{{ @$edit_medicine->other_charges }}" required>
+                      <input class="form-control" name="other_charges" id="other_charges" value="{{ @$edit_medicine->other_charges }}" required>
                     </div>
                   </div>
                   <div class="col-md-3">
@@ -144,8 +144,8 @@
          </div>
         </div>
       </div>
-    </div>
-    <div class="box">
+
+      <div class="box">
       <div class="box-header with-border">
         <h2 class="box-title text-dark">Filters</h2>
       </div>
@@ -189,13 +189,13 @@
     </div>
     <div class="box">
 				<div class="box-header with-border">
-				  <h2 class="box-title text-dark">All Purchase Medicine Entries</h2>
+				  <h2 class="box-title text-dark">All Sale Medicine Entries</h2>
 				</div>
                 <div class="col-12">
 
             <div class="box">
             <div class="box-header with-border">
-                <h4 class="box-title"> Medicine Details</h4>
+                <h4 class="box-title">Sale Medicine Details</h4>
             </div>
             <!-- /.box-header -->
             <div class="box-body">
@@ -214,7 +214,7 @@
                     </thead>
                     <tbody>
                       @foreach($sale_medicines AS $sale) 
-                        <tr>
+                        <tr class="text-dark">
                           <td>{{ $sale->account->name }}</td>
                           <td>{{ $sale->company->name }}</td>
                           <td>{{ $sale->item->name }}</td>
@@ -222,10 +222,11 @@
                           <td>{{ $sale->quantity }}</td>
                           <td>{{ $sale->net_ammount }}</td>
                           <td>
-                            <a href="{{ route('admin.medicines.sale_edit',['id'=>$sale->hashid]) }}" class="btn btn-primary btn-xs waves-effect waves-light"  >
-                                <i class="fas fa-edit"></i>
+                            <a href="{{ route('admin.medicines.sale_edit',['id'=>$sale->hashid]) }}" >
+                            <span class="waves-effect waves-light btn btn-rounded btn-primary-light"><i class="fas fa-edit"></i></span>
+
                             </a>
-                            <button type="button" onclick="ajaxRequest(this)" data-url="{{ route('admin.feeds.sale_delete', ['id'=>$sale->hashid]) }}"  class="btn btn-danger btn-xs waves-effect waves-light">
+                            <button type="button" onclick="ajaxRequest(this)" data-url="{{ route('admin.feeds.sale_delete', ['id'=>$sale->hashid]) }}"  class="waves-effect waves-light btn btn-rounded btn-primary-light">
                             <i class="fa-sharp fa-solid fa-plus"></i> &nbsp Post
                             </button>
                           </td>
@@ -233,7 +234,7 @@
                     @endforeach
                     </tbody>
                     <tfoot>
-                        <tr>
+                        <tr class="text-dark">
                             <th>Acount Name</th>
                             <th>Company Name</th>
                             <th>Item</th>
@@ -253,11 +254,24 @@
 
 			  </div>
 </div>
+
+    </div>
+  
 @endsection
 
 @section('page-scripts')
 @include('admin.partials.datatable')
 <script>
+
+  $('#other_charges').keyup(function(){
+    var other_charges = $("#other_charges").val();
+    var net_val = $("#net_ammount").val();
+    var final_value = net_val - other_charges;
+     $("#net_ammount").val(final_value);
+    
+    
+  });
+
   $('#grand_parent_id').change(function(){
     var id    = $(this).val();
     var route = "{{ route('admin.cash.get_parent_accounts', ':id') }}";

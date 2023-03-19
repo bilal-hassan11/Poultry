@@ -254,10 +254,11 @@
                   <td>{{ $c->payment_ammount }}</td>
                   <td>{{ $c->receipt_ammount }}</td>
                   <td width="120">
-                                <a href="{{route('admin.cash.edit', $c->hashid)}}" class="btn btn-warning btn-xs waves-effect waves-light">
-                                    <i class="fas fa-edit"></i>
+                                <a href="{{route('admin.cash.edit', $c->hashid)}}" >
+                                <span class="waves-effect waves-light btn btn-rounded btn-primary-light"><i class="fas fa-edit"></i></span>
+
                                 </a>
-                                <button type="button" onclick="ajaxRequest(this)" data-url="{{ route('admin.cash.delete', $c->hashid) }}"  class="btn btn-danger btn-xs waves-effect waves-light">
+                                <button type="button" onclick="ajaxRequest(this)" data-url="{{ route('admin.cash.delete', $c->hashid) }}"  class="waves-effect waves-light btn btn-rounded btn-primary-light">
                                     <i class="fas fa-trash"></i>
                                 </button>
                             </td>
