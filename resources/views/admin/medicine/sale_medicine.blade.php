@@ -326,7 +326,7 @@ $('#add_row_btn').click(function(){
                     '</div>'+
                   '</div>'+
                   '<div class="col-md-3">'+
-                     '<button type="button" class="btn btn-danger">x</button>'+
+                     '<button type="button" class="btn btn-danger remove_row_btn">x</button>'+
                   '</div></div>';
   $('.append_row').append(html);
 });
@@ -374,5 +374,10 @@ function getQuantity(){
   });
   return quantity_arr;
 }
+//remove row
+$(document).on('click', '.remove_row_btn', function(){
+  $(this).parent().parent().remove();
+  // alert('dpne');
+});
 </script>
 @endsection
