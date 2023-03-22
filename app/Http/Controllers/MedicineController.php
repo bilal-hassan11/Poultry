@@ -17,6 +17,7 @@ use App\Models\Category;
 use App\Models\PurchaseMedicine;
 use App\Models\SaleMedicine;
 use App\Models\SaleMedicineDetail;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class MedicineController extends Controller
 {
@@ -162,5 +163,10 @@ class MedicineController extends Controller
             'success'   => 'Sale medicine deleted successfully',
             'reload'    => true
         ]);
+    }
+
+    public function saleInvoice($id){
+        $pdf = Pdf::loadView('admin.medicine.invoice')->setOptions(['defaultFont' => 'sans-serif']);
+        return $pdf->download('invoice.pdf');
     }
 }

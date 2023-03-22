@@ -313,8 +313,8 @@ Route::middleware('auth:admin')->prefix('web_admin')->name('admin.')->group(func
         Route::post('/store-sale-medicine', 'storeSaleMedicine')->name('sale_store');
         Route::get('/edit-sale-medicine/{id}', 'editSaleMedicine')->name('sale_edit');
         Route::get('/delete-sale-medicine/{id}', 'deleteSaleChick')->name('sale_delete');
-
-        Route::get('/invoice', 'sale_medicine_invoice')->name('sale_medicine_invoice');
+        Route::get('/sale-invoice/{id}', 'saleInvoice')->name('sale_invoice');
+        // Route::get('/invoice', 'sale_medicine_invoice')->name('sale_medicine_invoice');
 
 
         Route::post('/store', 'store')->name('store');
@@ -334,7 +334,8 @@ Route::middleware('auth:admin')->prefix('web_admin')->name('admin.')->group(func
         Route::post('/store-sale-feed', 'storeSaleFeed')->name('sale_store');
         Route::get('/edit-sale-feed/{id}', 'editSaleFeed')->name('sale_edit');
         Route::get('/delete-sale-feed/{id}', 'deleteSaleFeed')->name('sale_delete');
-        
+
+
         Route::post('/store', 'store')->name('store');
         Route::get('/edit/{id}', 'edit')->name('edit');
         Route::get('/delete/{id}', 'delete')->name('delete');

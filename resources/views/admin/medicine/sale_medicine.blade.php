@@ -228,9 +228,12 @@
                           {{-- <td>{{ $sale->quantity }}</td> --}}
                           <td>{{ $sale->net_ammount }}</td>
                           <td>
+                            <a href="{{ route('admin.medicines.sale_invoice',['id'=>$sale->hashid]) }}" >
+                              <span class="waves-effect waves-light btn btn-rounded btn-primary-light"><i class="fas fa-download"></i></span>
+                            </a>
+
                             <a href="{{ route('admin.medicines.sale_edit',['id'=>$sale->hashid]) }}" >
                             <span class="waves-effect waves-light btn btn-rounded btn-primary-light"><i class="fas fa-edit"></i></span>
-
                             </a>
                             <button type="button" onclick="ajaxRequest(this)" data-url="{{ route('admin.feeds.sale_delete', ['id'=>$sale->hashid]) }}"  class="waves-effect waves-light btn btn-rounded btn-primary-light">
                             <i class="fa-sharp fa-solid fa-plus"></i> &nbsp Post
