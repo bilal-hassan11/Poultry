@@ -110,7 +110,7 @@
                   <div class="col-md-3">
                     <div class="form-group">
                       <label>Other Charges</label>
-                      <input class="form-control" name="other_charges" value="{{ @$edit_medicine->other_charges }}" required>
+                      <input class="form-control" name="other_charges" id="other_charges" value="{{ @$edit_medicine->other_charges }}" required>
                     </div>
                   </div>
                   <div class="col-md-3">
@@ -138,14 +138,15 @@
 
           </div>
         
+          
                
              </div> 
            </div>
          </div>
         </div>
       </div>
-    </div>
-    <div class="box">
+
+      <div class="box">
       <div class="box-header with-border">
         <h2 class="box-title text-dark">Filters</h2>
       </div>
@@ -214,7 +215,7 @@
                     </thead>
                     <tbody>
                       @foreach($purchase_medicines AS $purcahse) 
-                        <tr>
+                        <tr class="text-dark">
                           <td>{{ $purcahse->account->name }}</td>
                           <td>{{ $purcahse->company->name }}</td>
                           <td>{{ $purcahse->item->name }}</td>
@@ -222,10 +223,11 @@
                           <td>{{ $purcahse->quantity }}</td>
                           <td>{{ $purcahse->net_ammount }}</td>
                           <td>
-                            <a href="{{ route('admin.medicines.purchase_edit',['id'=>$purcahse->hashid]) }}" class="btn btn-primary btn-xs waves-effect waves-light"  >
-                                <i class="fas fa-edit"></i>
+                            <a href="{{ route('admin.medicines.purchase_edit',['id'=>$purcahse->hashid]) }}" >
+                            <span class="waves-effect waves-light btn btn-rounded btn-primary-light"><i class="fas fa-edit"></i></span>
+
                             </a>
-                            <button type="button" onclick="ajaxRequest(this)" data-url="{{ route('admin.feeds.purchase_delete', ['id'=>$purcahse->hashid]) }}"  class="btn btn-danger btn-xs waves-effect waves-light">
+                            <button type="button" onclick="ajaxRequest(this)" data-url="{{ route('admin.feeds.purchase_delete', ['id'=>$purcahse->hashid]) }}"  class="waves-effect waves-light btn btn-rounded btn-primary-light">
                             <i class="fa-sharp fa-solid fa-plus"></i> &nbsp Post
                             </button>
                           </td>
@@ -233,7 +235,7 @@
                     @endforeach
                     </tbody>
                     <tfoot>
-                        <tr>
+                        <tr class="text-dark">
                             <th>Acount Name</th>
                             <th>Company Name</th>
                             <th>Item</th>
@@ -253,11 +255,24 @@
 
 			  </div>
 </div>
+
+    </div>
+    
 @endsection
 
 @section('page-scripts')
 @include('admin.partials.datatable')
 <script>
+
+  $('#other_charges').keyup(function(){
+    var other_charges = $("#other_charges").val();
+    var net_val = $("#net_ammount").val();
+    var final_value = net_val - other_charges;
+     $("#net_ammount").val(final_value);
+    
+    
+  });
+
   $('#grand_parent_id').change(function(){
     var id    = $(this).val();
     var route = "{{ route('admin.cash.get_parent_accounts', ':id') }}";

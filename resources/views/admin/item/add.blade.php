@@ -11,7 +11,7 @@
                 <form action="{{ route('admin.items.store') }}" class="ajaxForm" method="POST">
                     @csrf
                     <div class="row">
-                        <div class="col-md-6 form-group">
+                        <div class="col-md-4 form-group">
                             <label for="">Category</label>
                             <select class="form-control select2" name="category_id" id="category_id">
                                     <option value="">Select category</option>
@@ -20,13 +20,20 @@
                                 @endforeach
                             </select>
                         </div>
-                        <div class="col-md-6 form-group">
+                        <div class="col-md-4 form-group">
+                            <label for="">Companies</label>
+                            <select class="form-control select2" name="company_id" id="company_id">
+                                    <option value="">Select Company</option>
+                                
+                            </select>
+                        </div>
+                        <div class="col-md-4 form-group">
                             <label for="">Item Name</label>
                             <input type="text" class="form-control" placeholder="Enter item name here" value="{{ @$edit_item->name }}" name="name" id="name" required>
                         </div>
                     </div>
                     <div class="row">
-                        <div class="col-md-6 form-group">
+                        <div class="col-md-4 form-group">
                             <label for="">Item Type</label>
                             <select class="form-control select2" name="type" id="type">
                                 <option value="">Select item type</option>
@@ -34,13 +41,20 @@
                                 <option value="sale" @if(@$edit_item->type == 'sale') selected @endif>Sale</option>
                             </select>
                         </div>
-                        <div class="col-md-6 form-group">
+
+                        <div class="col-md-4 form-group">
+                            <label for="">Item Unit</label>
+                            <input type="text" class="form-control" placeholder="0" value="{{ @$edit_item->unit }}"  name="unit"  required>
+
+                        </div>
+
+                        <div class="col-md-4 form-group">
                             <label for="">Item Rate</label>
                             <input type="number" class="form-control" placeholder="0" value="{{ @$edit_item->price }}" min="0" name="price" id="price" required>
                         </div>
                     </div>
                     <div class="row">
-                        <div class="col-md-6 form-group">
+                        <div class="col-md-4 form-group">
                             <label for="">Item Stock Status</label>
                             <select class="form-control select2" name="stock_status" id="stock_status">
                                 <option value="">Select stock status</option>
@@ -48,7 +62,7 @@
                                 <option value="0" @if(@$edit_item->stock_status == 1) selected @endif>Disable</option>
                             </select>
                         </div>
-                        <div class="col-md-6 form-group">
+                        <div class="col-md-4 form-group">
                             <label for="">Item Status</label>
                             <select class="form-control select2" name="item_status" id="item_status">
                                 <option value="">Select item status</option>
@@ -78,7 +92,32 @@
 
 @section('page-scripts')
 @include('admin.partials.datatable')
+
+
 <script>
+
+    //get All Companies
+    $('#category_id').change(function(){
+        var id = $(this).val();
+        var route = "{{ route('admin.common.companies', ':id') }}";
+        route     = route.replace(':id', id);
+        
+        getAjaxRequests(route, '', 'GET', function(resp){
+            $('#company_id').html(resp.html);
+        });
+    });
+
+    //get All Companies
+    $('#company_id').change(function(){
+        var id = $(this).val();
+        var route = "{{ route('admin.common.items', ':id') }}";
+        route     = route.replace(':id', id);
+        
+        getAjaxRequests(route, '', 'GET', function(resp){
+            $('#item_id').html(resp.html);
+        });
+    });
+
     $('#grand_parent_id').change(function(){
         var id = $(this).val();
         var route = "{{ route('admin.common.get_parent_account', ':id') }}";

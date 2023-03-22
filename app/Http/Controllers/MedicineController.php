@@ -23,11 +23,19 @@ class MedicineController extends Controller
     public function purchase_medicine(Request $req){
         $data = array(
             'title'     => 'Purchase Medicine',
-            'accounts'          => Account::latest()->get(),
+            'accounts'          => Account::where('grand_parent_id','5')->latest()->get(),
             'category'          => Category::with(['companies', 'items'])->where('name', 'Chick')->first(),
             'purchase_medicines'     => PurchaseMedicine::with(['company:id,name','account:id,name','item:id,name'])->latest()->get(),
         );
         return view('admin.medicine.purchase_medicine')->with($data);
+    }
+
+    public function sale_medicine_invoice(Request $req){
+        $data = array(
+            'title'     => 'Medicine Invoice',
+            
+        );
+        return view('admin.medicine.invoice')->with($data);
     }
 
     public function storePurchaseMedicine(PurchaseMedicineRequest $req){
@@ -85,7 +93,7 @@ class MedicineController extends Controller
     public function sale_medicine(Request $req){
         $data = array(
             'title'     => 'Sale Medicine',
-            'accounts'          => Account::latest()->get(),
+            'accounts'          => Account::where('grand_parent_id','5')->latest()->get(),
             'category'          => Category::with(['companies', 'items'])->where('name', 'Chick')->first(),
             'sale_medicines'     => SaleMedicine::with(['company:id,name','account:id,name','item:id,name'])->latest()->get(),
         );
