@@ -11,4 +11,12 @@ class SaleMedicineDetail extends Model
     use HasFactory, DianujHashidsTrait;
 
     protected $table = 'sale_medicine_details';
+
+    public function company(){
+        return $this->belongsTo(Company::class, 'company_id', 'id');
+    }
+
+    public function item(){
+        return $this->belongsTo(Item::class, 'item_id', 'id');
+    }
 }

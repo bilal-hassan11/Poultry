@@ -166,7 +166,8 @@ class MedicineController extends Controller
     }
 
     public function saleInvoice($id){
-        $pdf = Pdf::loadView('admin.medicine.invoice')->setOptions(['defaultFont' => 'sans-serif']);
+        $sale = SaleMedicine::with(['sale_details'])->findOrFail(hashids_decode($id));
+        $pdf = Pdf::loadView('admin.medicine.invoice', compact('sale'));
         return $pdf->download('invoice.pdf');
     }
 }

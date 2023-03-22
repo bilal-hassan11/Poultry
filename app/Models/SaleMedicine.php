@@ -27,4 +27,8 @@ class SaleMedicine extends Model
     public function account(){
         return $this->belongsTo(Account::class, 'account_id', 'id');
     }
+
+    public function sale_details(){
+        return $this->hasMany(SaleMedicineDetail::class, 'sale_medicine_id', 'id');
+    }
 }
